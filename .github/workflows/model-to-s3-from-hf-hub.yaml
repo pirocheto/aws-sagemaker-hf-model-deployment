@@ -26,7 +26,7 @@ jobs:
 
       - name: Deploy Hugging Face Model
         run: |
-          git clone ${{ env.HF_MODEL_NAME }}
+          git clone git@hf.co:${{ env.HF_MODEL_NAME }}
           cd ${{ env.HF_MODEL_NAME }}
 
       - name: Create Archive
