@@ -13,11 +13,13 @@ permissions:
 
 env:
   AWS_REGION: "us-east-1"
-  HF_MODEL_NAME: "tabularisai/multilingual-sentiment-analysis"
   ENVIRONMENT: ${{ github.ref_name == 'main' && 'prod' || github.ref_name == 'test' && 'test' }}
 
+  HF_USERNAME: "tabularisai"
+  HF_REPOSITORY_NAME: "multilingual-sentiment-analysis"
+
 jobs:
-  deploy_model:
+  copy_model_to_s3:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,11 +28,11 @@ jobs:
 
       - name: Clone HuggingFace Repository
         run: |
-          git clone https://huggingface.co/${{ env.HF_MODEL_NAME }}
+          git clone https://huggingface.co/${{ env.HF_USERNAME }}/${{ env.HF_REPOSITORY_NAME }}
 
       - name: Create Model Archive
         run: |
-          cd ${{ env.HF_MODEL_NAME }}
+          cd ${{ env.HF_REPOSITORY_NAME }}
           tar -czvf model.tar.gz *
 
       - name: Configure AWS Credentials
@@ -43,6 +45,6 @@ jobs:
 
       - name: Upload Model to S3
         env:
-          S3_BUCKET_NAME: "dev-sagemaker-us-east-1-639269844451"
-          S3_MODEL_PATH: "${{ env.ENVIRONMENT }}/${{ env.HF_MODEL_NAME }}/model.tar.gz"
-        run: s3 cp model.tar.gz s3://${{ env.S3_BUCKET_NAME }}/${{ env.S3_MODEL_PATH }}
+          S3_BUCKET_NAME: "sagemaker-us-east-1-639269844451"
+          S3_MODEL_KEY: "${{ env.ENVIRONMENT }}/${{ env.HF_USERNAME }}/${{ env.HF_REPOSITORY_NAME }}/model.tar.gz"
+        run: s3 cp model.tar.gz s3://${{ env.S3_BUCKET_NAME }}/${{ env.S3_MODEL_KEY }}
