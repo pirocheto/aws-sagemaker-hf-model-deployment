@@ -24,12 +24,11 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Deploy Hugging Face Model
+      - name: Clone HuggingFace Repository
         run: |
-          git clone git@hf.co:${{ env.HF_MODEL_NAME }}
-          cd ${{ env.HF_MODEL_NAME }}
+          git clone https://huggingface.co/${{ env.HF_MODEL_NAME }}
 
-      - name: Create Archive
+      - name: Create Model Archive
         run: |
           cd ${{ env.HF_MODEL_NAME }}
           tar -czvf model.tar.gz *
