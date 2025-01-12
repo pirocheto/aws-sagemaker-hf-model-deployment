@@ -33,7 +33,7 @@ jobs:
       - name: Create Model Archive
         run: |
           cd ${{ env.HF_REPOSITORY_NAME }}
-          tar -czvf model.tar.gz *
+          tar -czvf --totals model.tar.gz *
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -47,4 +47,4 @@ jobs:
         env:
           S3_BUCKET_NAME: "sagemaker-us-east-1-639269844451"
           S3_MODEL_KEY: "${{ env.ENVIRONMENT }}/${{ env.HF_USERNAME }}/${{ env.HF_REPOSITORY_NAME }}/model.tar.gz"
-        run: s3 cp model.tar.gz s3://${{ env.S3_BUCKET_NAME }}/${{ env.S3_MODEL_KEY }}
+        run: aws s3 cp model.tar.gz s3://${{ env.S3_BUCKET_NAME }}/${{ env.S3_MODEL_KEY }}
