@@ -5,16 +5,8 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
-variable "model_author_name" {
-  description = "Author name of the model"
-}
-
 variable "model_name" {
   description = "Name of the model"
-}
-
-variable "model_src" {
-  description = "Path to the model.tar.gz file"
 }
 
 variable "python_version" {

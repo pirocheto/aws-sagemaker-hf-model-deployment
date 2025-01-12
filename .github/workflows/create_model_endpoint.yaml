@@ -1,0 +1,52 @@
+name: Create Sagemeker Model Endpoint
+
+on:
+  push:
+    branches:
+      - test
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: us-east-1
+  ENVIRONMENT: ${{ github.ref_name == 'main' && 'prod' || github.ref_name == 'test' && 'test' }}
+
+jobs:
+  create_model_endpoint:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: terraform
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          audience: sts.amazonaws.com
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: arn:aws:iam::639269844451:role/github-actions
+          role-session-name: ${{ env.ENVIRONMENT }}-deployment
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Select/Create Terraform Workspace
+        run: |
+          terraform workspace list || echo "Workspace list unavailable"
+          terraform workspace select --or-create ${{ env.ENVIRONMENT }}
+
+      - name: Terraform Plan
+        run: terraform plan
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve

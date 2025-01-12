@@ -5,9 +5,7 @@ locals {
 module "model" {
   source               = "./modules/aws-sagemaker-hf-pytorch-inference-model-deployment"
   aws_region           = "us-east-1"
-  model_author_name    = "tabularisai"
   model_name           = "multilingual-sentiment-analysis"
-  model_src            = abspath("../model.tar.gz")
   python_version       = "py310"
   ubuntu_version       = "22.04"
   transformers_version = "4.37.0"

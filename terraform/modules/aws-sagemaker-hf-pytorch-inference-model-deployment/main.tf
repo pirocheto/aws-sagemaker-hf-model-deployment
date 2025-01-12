@@ -8,13 +8,6 @@ locals {
   ecr_image_tag  = "${var.pytorch_version}-transformers${var.transformers_version}-cpu-${var.python_version}-ubuntu${var.ubuntu_version}"
 }
 
-resource "aws_s3_object" "model_upload" {
-  bucket = var.model_bucket_name
-  key    = var.model_bucket_key
-  source = var.model_src
-  etag   = filemd5(var.model_src)
-}
-
 resource "aws_iam_role" "model_execution_role" {
   name = "${local.env}-sagemaker-${var.model_name}-execution-role"
 
@@ -92,17 +85,9 @@ resource "aws_iam_role_policy_attachment" "ecr_policy_attachment" {
 resource "aws_sagemaker_model" "model" {
   name               = var.model_name
   execution_role_arn = aws_iam_role.model_execution_role.arn
-  # primary_container {
-  #   image          = "${local.ecr_image_name}:${local.ecr_image_tag}"
-  #   model_data_url = "s3://${aws_s3_object.model_upload.bucket}/${aws_s3_object.model_upload.key}"
-  # }
-
   primary_container {
-    image = "763104351884.dkr.ecr.us-east-1.amazonaws.com/huggingface-pytorch-inference:2.1.0-transformers4.37.0-cpu-py310-ubuntu22.04"
-    environment = {
-      HF_MODEL_ID = "distilbert-base-uncased"
-      HF_TASK     = "text-classification"
-    }
+    image          = "${local.ecr_image_name}:${local.ecr_image_tag}"
+    model_data_url = "s3://${var.model_bucket_name}/${var.model_bucket_key}"
   }
 }
 
