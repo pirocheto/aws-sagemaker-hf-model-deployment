@@ -1,15 +1,14 @@
 data "aws_caller_identity" "current" {}
 
-
 locals {
-  env            = terraform.workspace
   account_id     = data.aws_caller_identity.current.account_id
   ecr_image_name = "763104351884.dkr.ecr.${var.aws_region}.amazonaws.com/huggingface-pytorch-inference"
   ecr_image_tag  = "${var.pytorch_version}-transformers${var.transformers_version}-cpu-${var.python_version}-ubuntu${var.ubuntu_version}"
 }
 
+
 resource "aws_iam_role" "model_execution_role" {
-  name = "${local.env}-sagemaker-${var.model_name}-execution-role"
+  name = "sagemaker-${var.model_name}-execution-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -26,7 +25,7 @@ resource "aws_iam_role" "model_execution_role" {
 }
 
 resource "aws_iam_policy" "s3_policy" {
-  name = "${local.env}-sagemaker-${var.model_name}-s3-policy"
+  name = "sagemaker-${var.model_name}-s3-policy"
 
   policy = jsonencode({
     "Version" : "2012-10-17",
@@ -44,7 +43,7 @@ resource "aws_iam_policy" "s3_policy" {
 }
 
 resource "aws_iam_policy" "ecr_policy" {
-  name = "${local.env}-sagemaker-${var.model_name}-ecr-policy"
+  name = "sagemaker-${var.model_name}-ecr-policy"
 
   policy = jsonencode({
     "Version" : "2012-10-17",
@@ -92,7 +91,7 @@ resource "aws_sagemaker_model" "model" {
 }
 
 resource "aws_sagemaker_endpoint_configuration" "model_endpoint_configuration" {
-  name = "${local.env}-sagemaker-${var.model_name}-endpoint-config"
+  name = "sagemaker-${var.model_name}-endpoint-config"
   production_variants {
     initial_variant_weight = 1
     model_name             = aws_sagemaker_model.model.name
@@ -107,6 +106,6 @@ resource "aws_sagemaker_endpoint_configuration" "model_endpoint_configuration" {
 
 resource "aws_sagemaker_endpoint" "model_endpoint" {
   endpoint_config_name = aws_sagemaker_endpoint_configuration.model_endpoint_configuration.name
-  name                 = "${local.env}-sagemaker-${var.model_name}-endpoint"
+  name                 = "sagemaker-${var.model_name}-endpoint"
 }
 
