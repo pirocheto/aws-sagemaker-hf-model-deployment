@@ -3,7 +3,7 @@ import json
 import boto3
 
 AWS_REGION = "us-east-1"
-ENDPOINT_NAME = "dev-sagemaker-multilingual-sentiment-analysis-endpoint"
+ENDPOINT_NAME = "dev-multilingual-sentiment-analysis-endpoint"
 
 sagemaker_runtime = boto3.client("sagemaker-runtime", region_name=AWS_REGION)
 

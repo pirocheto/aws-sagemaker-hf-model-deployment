@@ -106,6 +106,6 @@ resource "aws_sagemaker_endpoint_configuration" "model_endpoint_configuration" {
 
 resource "aws_sagemaker_endpoint" "model_endpoint" {
   endpoint_config_name = aws_sagemaker_endpoint_configuration.model_endpoint_configuration.name
-  name                 = "sagemaker-${var.model_name}-endpoint"
+  name                 = "${var.model_name}-endpoint"
 }
 
