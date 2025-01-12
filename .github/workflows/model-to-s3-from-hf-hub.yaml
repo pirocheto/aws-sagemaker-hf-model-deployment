@@ -19,7 +19,7 @@ env:
   HF_REPOSITORY_NAME: "multilingual-sentiment-analysis"
 
 jobs:
-  copy_model_to_s3:
+  push_model_to_s3:
     runs-on: ubuntu-latest
 
     steps:
@@ -33,7 +33,7 @@ jobs:
       - name: Create Model Archive
         run: |
           cd ${{ env.HF_REPOSITORY_NAME }}
-          tar -czvf --totals model.tar.gz *
+          tar -czvf model.tar.gz *
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
