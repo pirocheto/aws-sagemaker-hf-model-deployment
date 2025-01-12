@@ -49,4 +49,4 @@ jobs:
           S3_MODEL_KEY: "${{ env.ENVIRONMENT }}/${{ env.HF_USERNAME }}/${{ env.HF_REPOSITORY_NAME }}/model.tar.gz"
         run: |
           cd ${{ env.HF_REPOSITORY_NAME }}
-          aws s3 cp model.tar.gz s3://${{ env.S3_BUCKET_NAME }}/${{ env.S3_MODEL_KEY }}
+          aws s3 cp model.tar.gz s3://${{ env.S3_BUCKET_NAME }}/${{ env.S3_MODEL_KEY }} --no-progress
