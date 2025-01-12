@@ -3,7 +3,7 @@ import json
 import boto3
 
 AWS_REGION = "us-east-1"
-ENDPOINT_NAME = "dev-multilingual-sentiment-analysis-endpoint"
+ENDPOINT_NAME = "test-multilingual-sentiment-analysis-endpoint"
 
 sagemaker_runtime = boto3.client("sagemaker-runtime", region_name=AWS_REGION)
 
@@ -89,9 +89,13 @@ texts = [
 response = sagemaker_runtime.invoke_endpoint(
     EndpointName=ENDPOINT_NAME,
     ContentType="application/json",
-    Body=json.dumps(texts),
+    Body=json.dumps({"inputs": texts}),
 )
 
 
-result = json.loads(response["Body"].read().decode())
-print("Predicted sentiment:", result)
+result = json.loads(response["Body"].read())
+
+for text, sentiment in zip(texts, result):
+    print(f"Text: {text}")
+    print(f"Sentiment: {sentiment}")
+    print()

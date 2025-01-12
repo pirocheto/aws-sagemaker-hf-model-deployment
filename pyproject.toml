@@ -1,21 +1,10 @@
 [project]
-name = "aws-hf-model-deployment"
+name = "aws-sagemaker-hf-model-deployment"
 version = "0.1.0"
-description = "Add your description here"
+description = "AWS SageMaker Hugging Face Model Deployment"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = [
-    "huggingface-hub[cli]>=0.27.1",
-    "humanize>=4.11.0",
-    "transformers[torch]>=4.48.0",
-]
-
-[dependency-groups]
-dev = [
-    "boto3>=1.35.97",
-    "pytest>=8.3.4",
-    "sagemaker-huggingface-inference-toolkit>=2.4.1",
-]
+dependencies = ["boto3>=1.35.97"]
 
 [tool.mypy]
 disallow_untyped_calls = true
