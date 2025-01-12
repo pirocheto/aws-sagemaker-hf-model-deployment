@@ -1,0 +1,49 @@
+name: Deploy HuggingFace Model to S3 from HuggingFace Hub
+
+on:
+  push:
+    branches:
+      - test
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: "us-east-1"
+  HF_MODEL_NAME: "tabularisai/multilingual-sentiment-analysis"
+  ENVIRONMENT: ${{ github.ref_name == 'main' && 'prod' || github.ref_name == 'test' && 'test' }}
+
+jobs:
+  deploy_model:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Deploy Hugging Face Model
+        run: |
+          git clone ${{ env.HF_MODEL_NAME }}
+          cd ${{ env.HF_MODEL_NAME }}
+
+      - name: Create Archive
+        run: |
+          cd ${{ env.HF_MODEL_NAME }}
+          tar -czvf model.tar.gz *
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          audience: sts.amazonaws.com
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: arn:aws:iam::639269844451:role/github-actions
+          role-session-name: testing-deployment
+
+      - name: Upload Model to S3
+        env:
+          S3_BUCKET_NAME: "dev-sagemaker-us-east-1-639269844451"
+          S3_MODEL_PATH: "${{ env.ENVIRONMENT }}/${{ env.HF_MODEL_NAME }}/model.tar.gz"
+        run: s3 cp model.tar.gz s3://${{ env.S3_BUCKET_NAME }}/${{ env.S3_MODEL_PATH }}
