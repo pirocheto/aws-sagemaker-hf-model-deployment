@@ -9,10 +9,11 @@ wheels/
 # Virtual environments
 .venv
 
+.DS_Store
+
 .pytest_cache/
 hf_model/
 model.tar.gz
-
 
 .terraform/
 .terraform.lock.hcl
