@@ -1,10 +1,6 @@
-name: Deploy HuggingFace Model to S3 from HuggingFace Hub
+name: Push HuggingFace Model to S3 from HuggingFace Hub
 
 on:
-  push:
-    branches:
-      - test
-      - main
   workflow_dispatch:
 
 permissions:
@@ -41,7 +37,7 @@ jobs:
           audience: sts.amazonaws.com
           aws-region: ${{ env.AWS_REGION }}
           role-to-assume: arn:aws:iam::639269844451:role/github-actions
-          role-session-name: testing-deployment
+          role-session-name: ${{ env.ENVIRONMENT }}-deployment
 
       - name: Upload Model to S3
         env:
