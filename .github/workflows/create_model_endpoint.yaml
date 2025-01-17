@@ -17,7 +17,7 @@ env:
 
 jobs:
   create_model_endpoint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     defaults:
       run:
@@ -52,7 +52,7 @@ jobs:
         run: terraform apply -auto-approve
 
   test_model_endpoint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: create_model_endpoint
 
     defaults:
