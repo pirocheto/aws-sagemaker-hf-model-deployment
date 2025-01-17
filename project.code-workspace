@@ -1,0 +1,20 @@
+{
+    "folders": [
+      {
+        "name": "🔰 Root",
+        "path": "."
+      },
+      {
+        "name": "🚀 Continuous Deployment",
+        "path": ".github/workflows"
+      },
+      {
+        "name": "🏠 Infrastructure",
+        "path": "terraform"
+      },
+      {
+        "name": "⭐️ Model testing",
+        "path": "test_model"
+      }
+    ],
+  }
