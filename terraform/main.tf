@@ -3,7 +3,7 @@ locals {
 }
 
 module "model" {
-  source                = "./modules/aws-sagemaker-hf-pytorch-inference-model-deployment"
+  source                = "./modules/aws-sagemaker-serverless-hf-pytorch-inference-model-deployment"
   model_name            = "${local.env}-multilingual-sentiment-analysis"
   endpoint_variant_name = "variant-1"
   python_version        = "py310"
