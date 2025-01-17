@@ -4,7 +4,6 @@ locals {
 
 module "model" {
   source               = "./modules/aws-sagemaker-hf-pytorch-inference-model-deployment"
-  aws_region           = "us-east-1"
   model_name           = "${local.env}-multilingual-sentiment-analysis"
   python_version       = "py310"
   ubuntu_version       = "22.04"

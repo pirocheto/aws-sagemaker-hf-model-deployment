@@ -1,12 +1,9 @@
-
-
-variable "aws_region" {
-  description = "AWS region"
-  default     = "us-east-1"
-}
-
 variable "model_name" {
   description = "Name of the model"
+}
+
+variable "endpoint_variant_name" {
+  description = "Name of the endpoint variant"
 }
 
 variable "python_version" {

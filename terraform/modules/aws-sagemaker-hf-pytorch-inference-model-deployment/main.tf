@@ -1,8 +1,10 @@
 data "aws_caller_identity" "current" {}
 
+data "aws_region" "current" {}
+
 locals {
   account_id     = data.aws_caller_identity.current.account_id
-  ecr_image_name = "763104351884.dkr.ecr.${var.aws_region}.amazonaws.com/huggingface-pytorch-inference"
+  ecr_image_name = "763104351884.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/huggingface-pytorch-inference"
   ecr_image_tag  = "${var.pytorch_version}-transformers${var.transformers_version}-cpu-${var.python_version}-ubuntu${var.ubuntu_version}"
 }
 
@@ -64,7 +66,7 @@ resource "aws_iam_policy" "ecr_policy" {
           "ecr:ListTagsForResource",
           "ecr:DescribeImageScanFindings",
         ],
-        "Resource" : "arn:aws:ecr:${var.aws_region}:*:repository/*"
+        "Resource" : "arn:aws:ecr:${data.aws_region.current.name}:*:repository/*"
       }
     ]
   })
@@ -95,7 +97,7 @@ resource "aws_sagemaker_endpoint_configuration" "model_endpoint_configuration" {
   production_variants {
     initial_variant_weight = 1
     model_name             = aws_sagemaker_model.model.name
-    variant_name           = "Version1"
+    variant_name           = var.endpoint_variant_name
 
     serverless_config {
       memory_size_in_mb = var.memory_size_in_mb
